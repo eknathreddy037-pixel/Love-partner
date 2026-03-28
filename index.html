@@ -6,8 +6,8 @@
 
 <style>
 body {
-  font-family: Arial;
-  background: #f8d7da;
+  font-family: 'Arial';
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,31 +20,68 @@ body {
   padding: 25px;
   border-radius: 20px;
   text-align: center;
-  width: 300px;
-  box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+  width: 320px;
+  box-shadow: 0px 10px 30px rgba(0,0,0,0.15);
+  position: relative;
 }
 
-h2 span {
+h2 {
   color: #ff4d6d;
 }
 
 input, select {
   width: 90%;
-  padding: 10px;
+  padding: 12px;
   margin: 10px 0;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid #ccc;
 }
 
 button {
   padding: 12px;
-  width: 100%;
   border: none;
-  border-radius: 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  margin: 10px;
+  font-size: 15px;
+}
+
+.yes-btn {
   background: #ff4d6d;
   color: white;
-  font-size: 16px;
-  cursor: pointer;
+  width: 100%;
+}
+
+.no-btn {
+  background: #ddd;
+  position: absolute;
+}
+
+.hidden {
+  display: none;
+}
+
+/* hearts animation */
+.heart {
+  position: fixed;
+  color: red;
+  animation: floatUp 3s linear infinite;
+}
+
+@keyframes floatUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-600px);
+    opacity: 0;
+  }
+}
+
+/* final animation */
+#result {
+  font-size: 24px;
 }
 </style>
 
@@ -52,32 +89,104 @@ button {
 <body>
 
 <div class="container">
-  <h2>Pick a <span>question</span></h2>
-  <p>What do you want to ask?</p>
 
-  <input type="text" id="name" placeholder="Enter name 💕">
-
+<!-- CREATE LINK -->
+<div id="creator">
+  <h2>Create Love Link 💖</h2>
+  <input type="text" id="sender" placeholder="Your name">
+  
   <select id="question">
-    <option value="Will you be my girlfriend?">Will you be my girlfriend?</option>
-    <option value="Will you forever be mine?">Will you forever be mine?</option>
+    <option>Will you be my girlfriend?</option>
+    <option>Will you forever be mine?</option>
   </select>
 
-  <button onclick="goNext()">See Preview 💖</button>
+  <button onclick="generateLink()">Generate Link 🔗</button>
+  <p id="linkBox"></p>
+</div>
+
+<!-- RECEIVER -->
+<div id="receiver" class="hidden">
+  <h2>Enter your name 💕</h2>
+  <input type="text" id="partnerName">
+  <button onclick="startLove()">Continue 💖</button>
+</div>
+
+<!-- QUESTION -->
+<div id="questionPage" class="hidden">
+  <h2 id="finalQ"></h2>
+
+  <button class="yes-btn" onclick="yesClick()">Yes 💖</button>
+  <button class="no-btn" id="noBtn" onmouseover="moveNo()">No 😅</button>
+
+  <p id="msg"></p>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="hidden">
+  <h2>Yayyyyy 💖</h2>
+  <p>You are now officially together 💑💋</p>
+</div>
+
 </div>
 
 <script>
-function goNext() {
-  let name = document.getElementById("name").value;
+let noCount = 0;
+
+// generate link
+function generateLink(){
+  let sender = document.getElementById("sender").value;
   let q = document.getElementById("question").value;
 
-  if(name === ""){
-    alert("Enter name 😅");
+  if(sender === ""){
+    alert("Enter your name");
     return;
   }
 
-  window.location.href = `question.html?name=${name}&q=${q}`;
-}
-</script>
+  let link = window.location.origin + window.location.pathname +
+             `?sender=${encodeURIComponent(sender)}&q=${encodeURIComponent(q)}`;
 
-</body>
-</html>
+  document.getElementById("linkBox").innerHTML =
+    `<br>Share this link:<br><a href="${link}">${link}</a>`;
+}
+
+// check URL
+const params = new URLSearchParams(window.location.search);
+const sender = params.get("sender");
+const q = params.get("q");
+
+if(sender && q){
+  document.getElementById("creator").classList.add("hidden");
+  document.getElementById("receiver").classList.remove("hidden");
+}
+
+// start love
+function startLove(){
+  let partner = document.getElementById("partnerName").value;
+
+  if(partner === ""){
+    alert("Enter your name 😅");
+    return;
+  }
+
+  document.getElementById("receiver").classList.add("hidden");
+  document.getElementById("questionPage").classList.remove("hidden");
+
+  document.getElementById("finalQ").innerText =
+    `${partner}, ${q} 💖`;
+}
+
+// YES click
+function yesClick(){
+  document.getElementById("questionPage").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+
+  // hearts animation
+  setInterval(() => {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "💖";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 3000);
+  }, 300);
