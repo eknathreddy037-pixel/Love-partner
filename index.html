@@ -6,7 +6,7 @@
 
 <style>
 body {
-  font-family: 'Arial';
+  font-family: Arial;
   background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   display: flex;
   justify-content: center;
@@ -69,28 +69,17 @@ button {
 }
 
 @keyframes floatUp {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(-600px);
-    opacity: 0;
-  }
-}
-
-/* final animation */
-#result {
-  font-size: 24px;
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-600px); opacity: 0; }
 }
 </style>
-
 </head>
+
 <body>
 
 <div class="container">
 
-<!-- CREATE LINK -->
+<!-- STEP 1 -->
 <div id="creator">
   <h2>Create Love Link 💖</h2>
   <input type="text" id="sender" placeholder="Your name">
@@ -101,17 +90,17 @@ button {
   </select>
 
   <button onclick="generateLink()">Generate Link 🔗</button>
-  <p id="linkBox"></p>
+  <div id="linkBox"></div>
 </div>
 
-<!-- RECEIVER -->
+<!-- STEP 2 -->
 <div id="receiver" class="hidden">
   <h2>Enter your name 💕</h2>
   <input type="text" id="partnerName">
   <button onclick="startLove()">Continue 💖</button>
 </div>
 
-<!-- QUESTION -->
+<!-- STEP 3 -->
 <div id="questionPage" class="hidden">
   <h2 id="finalQ"></h2>
 
@@ -121,7 +110,7 @@ button {
   <p id="msg"></p>
 </div>
 
-<!-- RESULT -->
+<!-- STEP 4 -->
 <div id="result" class="hidden">
   <h2>Yayyyyy 💖</h2>
   <p>You are now officially together 💑💋</p>
@@ -132,7 +121,7 @@ button {
 <script>
 let noCount = 0;
 
-// generate link
+// GENERATE LINK
 function generateLink(){
   let sender = document.getElementById("sender").value;
   let q = document.getElementById("question").value;
@@ -142,14 +131,26 @@ function generateLink(){
     return;
   }
 
-  let link = window.location.origin + window.location.pathname +
-             `?sender=${encodeURIComponent(sender)}&q=${encodeURIComponent(q)}`;
+  let baseURL = window.location.href.split("?")[0];
+
+  let link = baseURL + 
+    "?sender=" + encodeURIComponent(sender) + 
+    "&q=" + encodeURIComponent(q);
 
   document.getElementById("linkBox").innerHTML =
-    `<br>Share this link:<br><a href="${link}">${link}</a>`;
+    `<br>
+    <input value="${link}" style="width:100%;padding:8px" readonly>
+    <br><br>
+    <button onclick="copyLink('${link}')">Copy Link 📋</button>`;
 }
 
-// check URL
+// COPY LINK
+function copyLink(link){
+  navigator.clipboard.writeText(link);
+  alert("Link copied! Send to your partner 💖");
+}
+
+// CHECK URL PARAMS
 const params = new URLSearchParams(window.location.search);
 const sender = params.get("sender");
 const q = params.get("q");
@@ -159,7 +160,7 @@ if(sender && q){
   document.getElementById("receiver").classList.remove("hidden");
 }
 
-// start love
+// START LOVE FLOW
 function startLove(){
   let partner = document.getElementById("partnerName").value;
 
@@ -172,10 +173,10 @@ function startLove(){
   document.getElementById("questionPage").classList.remove("hidden");
 
   document.getElementById("finalQ").innerText =
-    `${partner}, ${q} 💖`;
+    partner + ", " + q + " 💖";
 }
 
-// YES click
+// YES CLICK
 function yesClick(){
   document.getElementById("questionPage").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");
@@ -190,3 +191,28 @@ function yesClick(){
 
     setTimeout(() => heart.remove(), 3000);
   }, 300);
+}
+
+// NO BUTTON MOVE
+function moveNo(){
+  let btn = document.getElementById("noBtn");
+
+  noCount++;
+
+  if(noCount === 1){
+    document.getElementById("msg").innerText = "Oops 😅 wrong choice!";
+  }
+  else if(noCount === 2){
+    document.getElementById("msg").innerText = "Sorry baby 🥺 choose Yes ❤️";
+  }
+  else {
+    document.getElementById("msg").innerText = "Only Yes is allowed 😏";
+  }
+
+  btn.style.top = Math.random()*200 + "px";
+  btn.style.left = Math.random()*200 + "px";
+}
+</script>
+
+</body>
+  </html>
