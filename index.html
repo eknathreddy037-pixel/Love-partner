@@ -2,149 +2,144 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Love Partner 💖</title>
+<title>Love Quiz 💖</title>
 
 <style>
 body {
-  font-family: Arial;
-  background: linear-gradient(135deg, #ff9a9e, #fecfef);
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
+  overflow: hidden;
 }
 
 .container {
   background: white;
   padding: 30px;
-  border-radius: 20px;
+  border-radius: 25px;
   width: 320px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  position: relative;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
 }
 
 h2 {
   color: #ff4d6d;
 }
 
-input {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-
 button {
   padding: 12px;
   width: 100%;
+  margin: 8px 0;
   border: none;
   border-radius: 20px;
   background: #ff4d6d;
   color: white;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
-  margin-top: 10px;
-}
-
-.no-btn {
-  background: #ddd;
-  position: absolute;
-  width: 100px;
 }
 
 .hidden {
   display: none;
 }
 
-/* animation */
-#result {
-  font-size: 24px;
-  animation: pop 1s infinite alternate;
+/* hearts */
+.heart {
+  position: fixed;
+  color: #ff4d6d;
+  animation: floatUp 4s linear infinite;
 }
 
-@keyframes pop {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); }
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-700px); opacity: 0; }
 }
 </style>
 </head>
 
 <body>
 
+<!-- MUSIC -->
+<audio id="music" autoplay loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+</audio>
+
 <div class="container">
 
-<!-- STEP 1 -->
-<div id="step1">
-  <h2>Enter your name 💕</h2>
-  <input id="name" placeholder="Your name">
-  <button onclick="start()">Continue 💖</button>
+<!-- START -->
+<div id="start">
+  <h2>Love Quiz 💖</h2>
+  <button onclick="startQuiz()">Start 💘</button>
 </div>
 
-<!-- STEP 2 -->
-<div id="step2" class="hidden">
+<!-- QUIZ -->
+<div id="quiz" class="hidden">
   <h2 id="question"></h2>
 
-  <button onclick="yesClick()">Yes 💖</button>
-  <button class="no-btn" id="noBtn" onmouseover="moveNo()">No 😅</button>
-
-  <p id="msg"></p>
+  <button onclick="answer()">Option 1</button>
+  <button onclick="answer()">Option 2</button>
+  <button onclick="answer()">Option 3</button>
 </div>
 
-<!-- STEP 3 -->
-<div id="step3" class="hidden">
-  <h2>Yayyyyy 💖</h2>
-  <p id="result">💑💋 Love Accepted 💖</p>
+<!-- RESULT -->
+<div id="result" class="hidden">
+  <h2>💖 You Passed 💖</h2>
+  <p>You are my forever person 💑💋</p>
 </div>
 
 </div>
 
 <script>
-let noCount = 0;
 
-// START
-function start(){
-  let name = document.getElementById("name").value;
+let step = 0;
 
-  if(name === ""){
-    alert("Enter your name 😅");
-    return;
-  }
+const questions = [
+  "When did we first meet? 💕",
+  "Who loves more? 😏",
+  "Will you stay forever? 💖"
+];
 
-  document.getElementById("step1").classList.add("hidden");
-  document.getElementById("step2").classList.remove("hidden");
-
-  document.getElementById("question").innerText =
-    name + ", will you forever be mine? 💖";
+// start quiz
+function startQuiz(){
+  document.getElementById("start").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+  loadQuestion();
 }
 
-// YES
-function yesClick(){
-  document.getElementById("step2").classList.add("hidden");
-  document.getElementById("step3").classList.remove("hidden");
+// load question
+function loadQuestion(){
+  document.getElementById("question").innerText = questions[step];
 }
 
-// NO
-function moveNo(){
-  let btn = document.getElementById("noBtn");
+// answer click
+function answer(){
+  step++;
 
-  noCount++;
+  if(step < questions.length){
+    loadQuestion();
+  } else {
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("result").classList.remove("hidden");
 
-  if(noCount === 1){
-    document.getElementById("msg").innerText = "Oops 😅 wrong choice!";
+    startHearts();
   }
-  else if(noCount === 2){
-    document.getElementById("msg").innerText = "Sorry baby 🥺 choose Yes ❤️";
-  }
-  else {
-    document.getElementById("msg").innerText = "Only Yes allowed 😏";
-  }
-
-  btn.style.top = Math.random()*200 + "px";
-  btn.style.left = Math.random()*200 + "px";
 }
+
+// hearts animation
+function startHearts(){
+  setInterval(() => {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "💖";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 4000);
+  }, 300);
+}
+
 </script>
 
 </body>
