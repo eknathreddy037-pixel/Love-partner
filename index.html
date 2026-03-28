@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Love Partner 💖</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>Enter Your Name 💕</h2>
+  <input type="text" id="name" placeholder="Your name">
+
+  <h3>Pick a question</h3>
+  <select id="question">
+    <option value="Will you be my girlfriend?">Will you be my girlfriend?</option>
+    <option value="Will you forever be mine?">Will you forever be mine?</option>
+  </select>
+
+  <button onclick="goNext()">Continue 💘</button>
+</div>
+
+<script>
+function goNext() {
+  let name = document.getElementById("name").value;
+  let question = document.getElementById("question").value;
+
+  if(name === ""){
+    alert("Enter your name 😅");
+    return;
+  }
+
+  // pass data in URL
+  window.location.href = `question.html?name=${name}&q=${question}`;
+}
+</script>
+
+</body>
+  </html>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Love Question 💖</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2 id="questionText"></h2>
+
+  <button class="yes-btn" onclick="sayYes()">Yes 💖</button>
+  <button class="no-btn" onmouseover="moveNo()">No 😅</button>
+
+  <p id="msg"></p>
+</div>
+
+<script>
+// get URL data
+const params = new URLSearchParams(window.location.search);
+const name = params.get("name");
+const q = params.get("q");
+
+document.getElementById("questionText").innerText = `${name}, ${q}`;
+
+// yes click
+function sayYes(){
+  document.getElementById("msg").innerText = "You can't escape love 💕";
+}
+
+// moving no button
+function moveNo(){
+  let btn = document.querySelector(".no-btn");
+  btn.style.position = "absolute";
+  btn.style.top = Math.random()*300 + "px";
+  btn.style.left = Math.random()*300 + "px";
+}
+</script>
+
+</body>
+</html>
+body {
+  font-family: Arial;
+  background: #ffe6eb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  width: 300px;
+}
+
+input, select {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.yes-btn {
+  background: #ff4d6d;
+  color: white;
+}
+
+.no-btn {
+  background: #ddd;
+}
