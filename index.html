@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Love Link 💖</title>
+<title>Love Partner 💖</title>
 
 <style>
 body {
@@ -16,19 +16,20 @@ body {
 }
 
 .container {
-  background: #fff;
+  background: white;
   padding: 30px;
   border-radius: 20px;
   width: 320px;
   text-align: center;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  position: relative;
 }
 
 h2 {
   color: #ff4d6d;
 }
 
-input, select {
+input {
   width: 100%;
   padding: 12px;
   margin: 10px 0;
@@ -45,10 +46,28 @@ button {
   color: white;
   font-size: 16px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
-#linkBox {
-  margin-top: 15px;
+.no-btn {
+  background: #ddd;
+  position: absolute;
+  width: 100px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* animation */
+#result {
+  font-size: 24px;
+  animation: pop 1s infinite alternate;
+}
+
+@keyframes pop {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
 }
 </style>
 </head>
@@ -56,46 +75,75 @@ button {
 <body>
 
 <div class="container">
-  <h2>Create Love Link 💖</h2>
 
-  <input id="name" placeholder="Enter your name">
+<!-- STEP 1 -->
+<div id="step1">
+  <h2>Enter your name 💕</h2>
+  <input id="name" placeholder="Your name">
+  <button onclick="start()">Continue 💖</button>
+</div>
 
-  <select id="question">
-    <option>Will you forever be mine?</option>
-    <option>Do you love me?</option>
-  </select>
+<!-- STEP 2 -->
+<div id="step2" class="hidden">
+  <h2 id="question"></h2>
 
-  <button onclick="generateLink()">Generate Link 🔗</button>
+  <button onclick="yesClick()">Yes 💖</button>
+  <button class="no-btn" id="noBtn" onmouseover="moveNo()">No 😅</button>
 
-  <div id="linkBox"></div>
+  <p id="msg"></p>
+</div>
+
+<!-- STEP 3 -->
+<div id="step3" class="hidden">
+  <h2>Yayyyyy 💖</h2>
+  <p id="result">💑💋 Love Accepted 💖</p>
+</div>
+
 </div>
 
 <script>
-function generateLink() {
-  var name = document.getElementById("name").value;
-  var q = document.getElementById("question").value;
+let noCount = 0;
+
+// START
+function start(){
+  let name = document.getElementById("name").value;
 
   if(name === ""){
-    alert("Enter your name");
+    alert("Enter your name 😅");
     return;
   }
 
-  // IMPORTANT FIX
-  var base = window.location.origin + window.location.pathname;
+  document.getElementById("step1").classList.add("hidden");
+  document.getElementById("step2").classList.remove("hidden");
 
-  var finalLink = base + "?name=" + encodeURIComponent(name) + "&q=" + encodeURIComponent(q);
-
-  document.getElementById("linkBox").innerHTML =
-    "<p>Copy this link 👇</p>" +
-    "<input value='" + finalLink + "' readonly>" +
-    "<button onclick='copyText()'>Copy 📋</button>";
+  document.getElementById("question").innerText =
+    name + ", will you forever be mine? 💖";
 }
 
-function copyText(){
-  var input = document.querySelector("#linkBox input");
-  input.select();
-  document.execCommand("copy");
-  alert("Copied! Send to your partner 💖");
+// YES
+function yesClick(){
+  document.getElementById("step2").classList.add("hidden");
+  document.getElementById("step3").classList.remove("hidden");
+}
+
+// NO
+function moveNo(){
+  let btn = document.getElementById("noBtn");
+
+  noCount++;
+
+  if(noCount === 1){
+    document.getElementById("msg").innerText = "Oops 😅 wrong choice!";
+  }
+  else if(noCount === 2){
+    document.getElementById("msg").innerText = "Sorry baby 🥺 choose Yes ❤️";
+  }
+  else {
+    document.getElementById("msg").innerText = "Only Yes allowed 😏";
+  }
+
+  btn.style.top = Math.random()*200 + "px";
+  btn.style.left = Math.random()*200 + "px";
 }
 </script>
 
